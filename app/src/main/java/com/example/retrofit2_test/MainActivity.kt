@@ -25,18 +25,14 @@ class MainActivity : AppCompatActivity()
         btn1 = findViewById<Button>(R.id.btn1)
 
        btn1.setOnClickListener {
-
-           request()
+           request1()
        }
     }
 
-    private fun request()
+    private fun request1()
     {
-//        val baseURL = "http://10.100.204.53:9999/testWeb/testDB.jsp"
         val baseURL = "http://10.100.204.53:9999"
-
         var gson1 : Gson = GsonBuilder().setLenient().create()
-
         val retrofit = Retrofit
             .Builder()
             .baseUrl(baseURL)
@@ -44,16 +40,20 @@ class MainActivity : AppCompatActivity()
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service = retrofit.create(PeopleService::class.java)
+        val service = retrofit.create(UserInfoService::class.java)
 
-        service.getPeople().enqueue(object: Callback<People>
+        service.getPeople().enqueue(object: Callback<UserInfoList>
         {
-            override fun onResponse(call: Call<People>, response: Response<People>)
+            override fun onResponse(call: Call<UserInfoList>, response: Response<UserInfoList>)
             {
-//                tv1.text = "성공 😇😇😇😇" + response.body()?.name
-                tv1.text = "성공 😇😇😇😇" + response.body()            }
+               var userList1 = response.body()
+                var str1=""
+                for(i in 0..userList1!!.datas.size-1)
+                    str1 += "," + userList1!!.datas.get(i).ID //ID만 출력해 봄~!
+                    tv1.text = str1
+            }
 
-            override fun onFailure(call: Call<People>, t: Throwable)
+            override fun onFailure(call: Call<UserInfoList>, t: Throwable)
             {
                 tv1.text = "request 에 실패하였습니다."
                 // 에러 메세지를 표시하는 Toast 를 추가하는 등의 에러 처리를 추가하는 것도 가능 !
